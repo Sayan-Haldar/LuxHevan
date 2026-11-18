@@ -1,0 +1,100 @@
+:root {
+    --bs-primary: #2b7de9;
+    --bs-primary-rgb: 43, 125, 233;
+    --bs-link-color: #1a6fd4;
+    --bs-link-hover-color: #1457a8;
+    --bs-success: #2b7de9;
+    --bs-success-rgb: 43, 125, 233;
+    --bs-dark: #1a66c9;
+    --bs-dark-rgb: 26, 102, 201;
+}
+
+body {
+    background-color: #e7f4fc;
+    color: #16324f;
+}
+
+a {
+    color: #1a6fd4;
+}
+
+.container,
+#account-set,
+.card,
+.listing-card,
+.user-fnx,
+.nav-user,
+.nav-search {
+    background-color: #f7fbff;
+}
+
+#nav-main {
+    background-color: #d7ebf8;
+    border-bottom: 1px solid #b7d4ee;
+}
+
+#search {
+    background-color: #2b7de9;
+}
+
+#mySearchInput {
+    color: #16324f;
+}
+
+.main-ftr {
+    background-color: #d7ebf8;
+}
+
+.ftr-akash p,
+.ftr-akash p:hover {
+    background: none;
+    -webkit-text-fill-color: #1a66c9;
+    color: #1a66c9;
+}
+
+.styleBtn,
+.btn-primary,
+.btn-success,
+.btn-dark,
+.btn-outline-success {
+    background-color: #2b7de9 !important;
+    border-color: #1a66c9 !important;
+    color: #ffffff !important;
+    box-shadow: none;
+}
+
+.styleBtn:hover,
+.btn-primary:hover,
+.btn-success:hover,
+.btn-dark:hover {
+    background-color: #1a66c9 !important;
+}
+
+.btn-danger {
+    background-color: #d64545 !important;
+    border-color: #b42323 !important;
+    color: #ffffff !important;
+}
+
+.update-change > div {
+    background-color: #2b7de9;
+    color: #ffffff;
+}
+
+.main-profile-detail {
+    background-color: #d4ebfa;
+}
+
+body::-webkit-scrollbar,
+#category::-webkit-scrollbar {
+    background-color: #e7f4fc;
+}
+
+body::-webkit-scrollbar-thumb,
+#category::-webkit-scrollbar-thumb {
+    background-color: #7eb6e6;
+}
+
+.card {
+    border-color: #b7d4ee;
+}

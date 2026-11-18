@@ -1,0 +1,36 @@
+/* account-login-signup-auth---------------- */
+#account-set-main{
+    margin-top: 2rem;
+    padding: 0;
+    background-color: transparent;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+#account-set{
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 50%;
+    width: 60%;
+}
+@media (max-width: 786px) {
+    #account-set{
+        width: 90%;
+    }
+}
+
+@media (max-width: 576px) {
+    #account-set{
+        width: 100%;
+        padding: 0px 30px;
+    }
+}
+@media (max-width: 385px) {
+    #account-set{
+        width: 100%;
+        padding: 0px 8px;
+    }
+}

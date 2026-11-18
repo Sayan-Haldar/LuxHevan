@@ -1,0 +1,46 @@
+<% layout("/layouts/boilerplate") %>
+<link rel="stylesheet" href="/css/booking.css">
+
+<div class="col-lg-10 mx-auto mt-4">
+	<h2>Your trips</h2>
+	<p class="text-secondary">Reservations you have made on Wanderlust.</p>
+	<% if (!bookings.length) { %>
+		<div class="stay-search">
+			<h1>No trips yet</h1>
+			<p>When you reserve a stay, the dates, guests, and total show up here.</p>
+			<a class="btn btn-dark" href="/listings">Browse stays</a>
+		</div>
+	<% } else { %>
+		<div class="trip-list">
+			<% for (const booking of bookings) { %>
+				<article class="trip-card">
+					<% if (booking.listing && booking.listing.image) { %>
+						<img src="<%= booking.listing.image.url %>" alt="<%= booking.listing.title %>">
+					<% } %>
+					<div>
+						<span class="trip-status <%= booking.status %>"><%= booking.status %></span>
+						<h3 class="h5 mt-2 mb-1">
+							<% if (booking.listing) { %>
+								<a href="/listings/<%= booking.listing._id %>"><%= booking.listing.title %></a>
+							<% } else { %>
+								Stay removed
+							<% } %>
+						</h3>
+						<p class="mb-1 text-secondary">
+							<%= booking.checkIn.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) %>
+							–
+							<%= booking.checkOut.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) %>
+							· <%= booking.nights %> nights · <%= booking.guests %> guests
+						</p>
+						<strong>&#8377;<%= booking.total.toLocaleString("en-IN") %></strong>
+					</div>
+					<% if (booking.status === "confirmed") { %>
+						<form method="post" action="/bookings/<%= booking._id %>?_method=DELETE">
+							<button class="btn btn-outline-danger">Cancel</button>
+						</form>
+					<% } %>
+				</article>
+			<% } %>
+		</div>
+	<% } %>
+</div>
