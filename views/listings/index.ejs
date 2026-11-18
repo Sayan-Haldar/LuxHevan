@@ -1,173 +1,148 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WonderLust</title>
-</head> -->
-<% layout("/layouts/boilerplate") %>    <!-- is layout use karne se html ka set custome boilerplate milta h -->
-    <!-- <h3>All Listings</h3> -->
-    <!-- comment create new listing button this is use on navbar -->
-    <!-- <form method="get" action="/listings/new">
-        <button>Create New Listing</button>
-    </form> -->
+<% layout("/layouts/boilerplate") %>
     <link rel="stylesheet" href="/css/filter.css">
+    
     <section class="stay-search">
         <h1>Find your next stay</h1>
         <p>Search homes, then reserve dates, guests, and a live total on the stay page.</p>
+        
+        <!-- Quick Search Form -->
+        <form action="/listings/search" method="get" class="stay-search-bar-form mt-3 mb-3">
+            <div class="input-group stay-hero-search shadow-sm" style="border-radius: 999px; overflow: hidden; border: 1px solid #ddd;">
+                <span class="input-group-text bg-white border-0 ps-3"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                <input type="search" class="form-control border-0 shadow-none ps-2 py-2" name="q" placeholder="Search by city, country, stay title, or category (e.g. Bali, Beachfront, Aspen)..." value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>">
+                <button class="btn btn-danger px-4" type="submit" style="background-color: #fe424d; border-color: #fe424d; font-weight: 600;">Search</button>
+            </div>
+        </form>
+
         <div class="stay-pills">
-            <span class="stay-pill">Flexible dates</span>
-            <span class="stay-pill">1–16 guests</span>
-            <span class="stay-pill">Price updates as you change nights</span>
+            <a href="/listings/filter/Beachfront" class="stay-pill text-decoration-none">🏖️ Beachfront</a>
+            <a href="/listings/filter/Villas" class="stay-pill text-decoration-none">🏡 Villas</a>
+            <a href="/listings/filter/Iconic%20Cities" class="stay-pill text-decoration-none">🏙️ Iconic Cities</a>
+            <a href="/listings/filter/Mountains" class="stay-pill text-decoration-none">⛰️ Mountains</a>
+            <a href="/listings/filter/Amazing%20Pools" class="stay-pill text-decoration-none">🏊 Amazing Pools</a>
+            <a href="/listings/filter/Luxe" class="stay-pill text-decoration-none">✨ Luxe</a>
         </div>
     </section>
+
+    <% 
+        const activeCat = (typeof filterCategory !== 'undefined' && filterCategory) ? filterCategory.toLowerCase() : '';
+    %>
     <div class="filters-main">
         <div id="filters">
             <div class="left_img_button" id="slideButton" style="display: none;">
                 <i class="fa-solid fa-angle-left"></i>
             </div>
-            <a href="/listings/">
-                <div class="filter ALL ps-2 pe-2">
+            
+            <a href="/listings">
+                <div class="filter ALL ps-2 pe-2 <%= !activeCat ? 'selectedFilter' : '' %>">
                     <div><img src="/Icon/0.png" alt="icon" style="width: 25px; height: 25px;"></div>
                     <p style="text-decoration: none;">ALL</p>
                 </div>
             </a>
+            
             <a href="/listings/filter/Beachfront">
-                <div class="filter Beachfront">
+                <div class="filter Beachfront <%= activeCat === 'beachfront' ? 'selectedFilter' : '' %>">
                     <div><img src="/Icon/1.png" alt="icon" style="width: 25px; height: 25px;"></div>
                     <p>Beachfront</p>
                 </div>
             </a>
+            
             <a href="/listings/filter/Cabins">
-                <div class="filter Cabins">
+                <div class="filter Cabins <%= activeCat === 'cabins' ? 'selectedFilter' : '' %>">
                     <div><img src="/Icon/2.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>&nbsp;Cabins&nbsp;</p>
+                    <p>Cabins</p>
                 </div>
             </a>
-            <a href="/listings/filter/Omg">
-                <div class="filter OMG">
-                    <div><img src="/Icon/3.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>&nbsp;OMG!&nbsp;</p>
+            
+            <a href="/listings/filter/Villas">
+                <div class="filter Villas <%= activeCat === 'villas' ? 'selectedFilter' : '' %>">
+                    <div><i class="fa-solid fa-house-chimney-window" style="font-size: 22px; color: #444; line-height: 25px;"></i></div>
+                    <p>Villas</p>
                 </div>
             </a>
-            <a href="/listings/filter/Lake">
-                <div class="filter Lake">
+            
+            <a href="/listings/filter/Iconic%20Cities">
+                <div class="filter Iconic-cities <%= activeCat === 'iconic cities' ? 'selectedFilter' : '' %>">
+                    <div><img src="/Icon/21.png" alt="icon" style="width: 25px; height: 25px;"></div>
+                    <p>Iconic cities</p>
+                </div>
+            </a>
+            
+            <a href="/listings/filter/Mountains">
+                <div class="filter Mountains <%= activeCat === 'mountains' ? 'selectedFilter' : '' %>">
+                    <div><i class="fa-solid fa-mountain" style="font-size: 22px; color: #444; line-height: 25px;"></i></div>
+                    <p>Mountains</p>
+                </div>
+            </a>
+            
+            <a href="/listings/filter/Lakefront">
+                <div class="filter Lakefront <%= activeCat === 'lakefront' ? 'selectedFilter' : '' %>">
                     <div><img src="/Icon/4.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>&nbsp;Lake&nbsp;</p>
+                    <p>Lakefront</p>
                 </div>
             </a>
-            <a href="/listings/filter/Design">
-                <div class="filter Design">
-                    <div><img src="/Icon/5.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>&nbsp;Design&nbsp;</p>
-                </div>
-            </a>
-            <a href="/listings/filter/Amazing Pools">
-                <div class="filter Amazing-pools">
+            
+            <a href="/listings/filter/Amazing%20Pools">
+                <div class="filter Amazing-pools <%= activeCat === 'amazing pools' ? 'selectedFilter' : '' %>">
                     <div><img src="/Icon/6.png" alt="icon" style="width: 25px; height: 25px;"></div>
                     <p>Amazing pools</p>
                 </div>
             </a>
-            <a href="/listings/filter/Farms">
-                <div class="filter Farms">
-                    <div><img src="/Icon/7.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>&nbsp;Farms&nbsp;</p>
-                </div>
-            </a>
-            <a href="/listings/filter/Amazing Views">
-                <div class="filter Amazing-views">
-                    <div><img src="/Icon/8.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Amazing views</p>
-                </div>
-            </a>
-            <a href="/listings/filter/Rooms">
-                <div class="filter Rooms">
-                    <div><img src="/Icon/9.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>&nbsp;Rooms&nbsp;</p>
-                </div>
-            </a>
-            <a href="/listings/filter/Lakefront">
-                <div class="filter Lakefront">
-                    <div><img src="/Icon/10.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Lakefront</p>
-                </div>
-            </a>
-            <a href="/listings/filter/Tiny Homes">
-                <div class="filter Tiny-homes">
-                    <div><img src="/Icon/11.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Tiny homes</p>
-                </div>
-            </a>
+            
             <a href="/listings/filter/Countryside">
-                <div class="filter Countryside">
+                <div class="filter Countryside <%= activeCat === 'countryside' ? 'selectedFilter' : '' %>">
                     <div><img src="/Icon/12.png" alt="icon" style="width: 25px; height: 25px;"></div>
                     <p>Countryside</p>
                 </div>
             </a>
-            <a href="/listings/filter/Treehouse">
-                <div class="filter Treehouse">
-                    <div><img src="/Icon/13.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Treehouse</p>
-                </div>
-            </a>
-            <a href="/listings/filter/Trending">
-                <div class="filter Trending">
-                    <div><img src="/Icon/14.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Trending</p>
-                </div>
-            </a>
+            
             <a href="/listings/filter/Tropical">
-                <div class="filter Tropical">
+                <div class="filter Tropical <%= activeCat === 'tropical' ? 'selectedFilter' : '' %>">
                     <div><img src="/Icon/15.png" alt="icon" style="width: 25px; height: 25px;"></div>
                     <p>Tropical</p>
                 </div>
             </a>
-            <a href="/listings/filter/National Parks">
-                <div class="filter National-parks">
+            
+            <a href="/listings/filter/Treehouses">
+                <div class="filter Treehouse <%= activeCat === 'treehouses' ? 'selectedFilter' : '' %>">
+                    <div><img src="/Icon/13.png" alt="icon" style="width: 25px; height: 25px;"></div>
+                    <p>Treehouses</p>
+                </div>
+            </a>
+            
+            <a href="/listings/filter/Luxe">
+                <div class="filter Luxe <%= activeCat === 'luxe' ? 'selectedFilter' : '' %>">
+                    <div><img src="/Icon/20.png" alt="icon" style="width: 25px; height: 25px;"></div>
+                    <p>Luxe</p>
+                </div>
+            </a>
+            
+            <a href="/listings/filter/Rooms">
+                <div class="filter Rooms <%= activeCat === 'rooms' ? 'selectedFilter' : '' %>">
+                    <div><img src="/Icon/9.png" alt="icon" style="width: 25px; height: 25px;"></div>
+                    <p>Rooms</p>
+                </div>
+            </a>
+            
+            <a href="/listings/filter/Historic">
+                <div class="filter Historic <%= activeCat === 'historic' ? 'selectedFilter' : '' %>">
+                    <div><img src="/Icon/17.png" alt="icon" style="width: 25px; height: 25px;"></div>
+                    <p>Historic</p>
+                </div>
+            </a>
+            
+            <a href="/listings/filter/National%20Parks">
+                <div class="filter National-parks <%= activeCat === 'national parks' ? 'selectedFilter' : '' %>">
                     <div><img src="/Icon/16.png" alt="icon" style="width: 25px; height: 25px;"></div>
                     <p>National parks</p>
                 </div>
             </a>
-            <a href="/listings/filter/Castles">
-                <div class="filter Castles">
-                    <div><img src="/Icon/17.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Castles</p>
-                </div>
-                </a>
-            <a href="/listings/filter/Camping">
-                <div class="filter Camping">
-                    <div><img src="/Icon/18.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Camping</p>
-                </div>
-                </a>
-            <a href="/listings/filter/Top Of The World">
-                <div class="filter Top-of-the-world">
-                    <div><img src="/Icon/19.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Top of the world</p>
-                </div>
-                </a>
-            <a href="/listings/filter/Luxe">
-                <div class="filter Luxe">
-                    <div><img src="/Icon/20.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>&nbsp;Luxe&nbsp;</p>
-                </div>
-                </a>
-            <a href="/listings/filter/Iconic Cities">
-                <div class="filter Iconic-cities">
-                    <div><img src="/Icon/21.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Iconic cities</p>
-                </div>
-                </a>
-            <a href="/listings/filter/Earth Homes">
-                <div class="filter Earth-homes">
-                    <div><img src="/Icon/22.png" alt="icon" style="width: 25px; height: 25px;"></div>
-                    <p>Earth homes</p>
-                </div>
-            </a>
+            
             <div class="right_img_button" id="slideButton">
                 <i class="fa-solid fa-angle-right"></i>
             </div>
         </div>
+        
         <div class="tax-toggle tax-filter-icon filterIcon me-2 ms-2 " onclick="filterClick()">
             <div class="form-check form-switch form-check-reverse pe-1" style="cursor: pointer;">
                 <i class="fa-solid fa-sliders" id="filter-icon"></i>
@@ -186,21 +161,33 @@
             </div>
         </div>
     </div>
+    
     <div class="tax-toggle tax-sticky">
         <div class="form-check form-switch form-check-reverse">
             <input class="form-check-input tax-switch tax-sticky-sticky shadow-none" type="checkbox" role="switch" id="flexSwitchCheckDefaultS" style="cursor: pointer;">
             <label class="form-check-label changeAfter" for="flexSwitchCheckDefaultS" style="cursor: pointer;">Display total before taxes</label>
         </div>
     </div>
+    
     <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-1">
         <% if (allListing.length === 0) { %>
             <div class="col-12 text-center my-5 py-5">
-                <i class="fa-solid fa-hotel fa-3x text-muted mb-3"></i>
-                <h3>No Stays Available</h3>
-                <p class="text-muted">No listings match your search or filter. Try exploring another category!</p>
+                <div style="font-size: 3rem; margin-bottom: 0.75rem;">🔍</div>
+                <h3>No Stays Found</h3>
+                <p class="text-muted">
+                    <% if (typeof filterCategory !== 'undefined' && filterCategory) { %>
+                        No stays match the category "<%= filterCategory %>".
+                    <% } else if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+                        No stays found matching "<%= searchQuery %>".
+                    <% } else { %>
+                        No listings match your search or filters.
+                    <% } %>
+                    Try exploring other categories or clearing your search filters.
+                </p>
                 <a href="/listings" class="btn btn-outline-dark mt-2">Explore All Stays</a>
             </div>
         <% } %>
+        
         <% for (const listing of allListing) { %>
             <a href="/listings/<%= listing._id %>" class="listing-link">
                 <div class="card col listing-card index-res">
@@ -210,14 +197,13 @@
                             <img class="heart heart-b" src="/Icon/heart-black.png" alt="like" style="z-index: 6;">
                             <img src="<%= listing.image && listing.image.url ? listing.image.url : '/Icon/0.png' %>" class="card-img-top" alt="listing_image" />
                         </div>
-                        <!-- set date  -->
                         <%
-                        let day =Math.floor(Math.random() * 4 + 2);
+                        let day = Math.floor(Math.random() * 4 + 2);
                         let no = Math.floor(Math.random() * 28 + 1);
-                        let date = (new Date('2023-11-01')).getDate() + no;         //today ----
-                        let dateA = (new Date('2023-11-01')).getDate() + no + day;    //today + day ----
+                        let date = (new Date('2023-11-01')).getDate() + no;
+                        let dateA = (new Date('2023-11-01')).getDate() + no + day;
                         let month = Date().split(" ")[1];
-                         %>
+                        %>
                         <div class="card-body mt-1 ms-2">
                             <p class="card-text" style="display: block;">
                                 <b><%= listing.title %></b> <br>
@@ -233,34 +219,5 @@
             </a>
         <% } %>
     </div>
+
 <script defer src="/js/filter.js"></script>
-<script>
-    // let heartR = document.querySelectorAll(".heart-r")
-    // let heartB = document.querySelectorAll(".heart-b")
-    // for (const heartb of heartB) {
-    //     heartb.addEventListener("click", ()=>{
-    //         heartb.style.zIndex = "4"
-    //     })
-    // }
-    // for (const heartr of heartR) {
-    //     heartr.addEventListener("click", ()=>{
-    //         heartr.style.zIndex = "3"
-    //     })
-    // }
-
-    // let heart1 = document.querySelectorAll(".heart")
-    // // for (const heart1 of heart) {
-    // for(let i = 1; i<  heart1.length; i++){
-    //     console.log(heart1[i])
-    //     heart1[i].addEventListener("click", ()=>{
-    //         // console.log(`click heart: ${heart1[i]}`)
-    //     // heart1.addEventListener("click", ()=>{
-    //     //     for (const h of heart1) {
-    //     //         // console.log(h)
-    //     //         h[0].style.zIndex = "4"
-    //     //         h[1].style.zIndex = "3"
-    //     //     }
-    //     })
-    // }
-
-</script>

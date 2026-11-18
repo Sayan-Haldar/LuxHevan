@@ -94,17 +94,21 @@ module.exports.destroyListing = async (req, res, next) => {
 	res.redirect("/listings");
 };
 
+function escapeRegex(text) {
+	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+
 module.exports.filter = async (req, res, next) => {
 	let { id } = req.params;
-	let allListing = await Listing.find({ category: { $all: [id] } });
-	console.log(allListing);
-	if (allListing.length != 0) {
-		res.locals.success = `Listings Find by ${id}`;
-		res.render("listings/index.ejs", { allListing });
-	} else {
-		req.flash("error", "Listings is not here !!!");
-		res.redirect("/listings");
+	let escapedCategory = escapeRegex(id.trim());
+	let allListing = await Listing.find({
+		category: { $regex: new RegExp(`^${escapedCategory}$`, "i") },
+	}).sort({ _id: -1 });
+
+	if (allListing.length !== 0) {
+		res.locals.success = `Showing ${allListing.length} stay${allListing.length > 1 ? "s" : ""} in "${id}"`;
 	}
+	res.render("listings/index.ejs", { allListing, filterCategory: id });
 };
 
 module.exports.filterbtn = (req, res, next) => {
@@ -112,82 +116,59 @@ module.exports.filterbtn = (req, res, next) => {
 };
 
 module.exports.search = async (req, res) => {
-	let q = req.query.q || "";
-	let input = q.trim().replace(/\s+/g, " "); // remove start and end space and middle space remove and middle add one space------
-	console.log(input);
-	if (input == "" || input == " ") {
-		//search value empty
-		req.flash("error", "Search value empty !!!");
-		return res.redirect("/listings");
-	}
+	let q = (req.query.q || "").trim();
+	let minPrice = req.query.minPrice ? Number(req.query.minPrice) : null;
+	let maxPrice = req.query.maxPrice ? Number(req.query.maxPrice) : null;
+	let category = (req.query.category || "").trim();
 
-	// convert every word 1st latter capital and other small---------------
-	let data = input.split("");
-	let element = "";
-	let flag = false;
-	for (let index = 0; index < data.length; index++) {
-		if (index == 0 || flag) {
-			element = element + data[index].toUpperCase();
+	let conditions = [];
+
+	if (q) {
+		let cleanQ = q.replace(/\s+/g, " ");
+		let num = Number(cleanQ);
+		if (!isNaN(num) && num > 0) {
+			conditions.push({ price: { $lte: num } });
 		} else {
-			element = element + data[index].toLowerCase();
+			let terms = cleanQ.split(" ").filter((t) => t.length > 0);
+			for (let term of terms) {
+				let termRegex = new RegExp(escapeRegex(term), "i");
+				conditions.push({
+					$or: [
+						{ title: termRegex },
+						{ description: termRegex },
+						{ location: termRegex },
+						{ country: termRegex },
+						{ category: termRegex },
+					],
+				});
+			}
 		}
-		flag = data[index] == " ";
 	}
-	console.log(element);
 
-	let allListing = await Listing.find({
-		title: { $regex: element, $options: "i" },
-	});
-	if (allListing.length != 0) {
-		res.locals.success = "Listings searched by Title";
-		res.render("listings/index.ejs", { allListing });
-		return;
+	if (minPrice !== null && !isNaN(minPrice) && minPrice > 0) {
+		conditions.push({ price: { $gte: minPrice } });
 	}
-	if (allListing.length == 0) {
-		allListing = await Listing.find({
-			category: { $regex: element, $options: "i" },
-		}).sort({ _id: -1 });
-		if (allListing.length != 0) {
-			res.locals.success = "Listings searched by Category";
-			res.render("listings/index.ejs", { allListing });
-			return;
-		}
+	if (maxPrice !== null && !isNaN(maxPrice) && maxPrice > 0) {
+		conditions.push({ price: { $lte: maxPrice } });
 	}
-	if (allListing.length == 0) {
-		allListing = await Listing.find({
-			country: { $regex: element, $options: "i" },
-		}).sort({ _id: -1 });
-		if (allListing.length != 0) {
-			res.locals.success = "Listings searched by Country";
-			res.render("listings/index.ejs", { allListing });
-			return;
-		}
-	}
-	if (allListing.length == 0) {
-		let allListing = await Listing.find({
-			location: { $regex: element, $options: "i" },
-		}).sort({ _id: -1 });
-		if (allListing.length != 0) {
-			res.locals.success = "Listings searched by Location";
-			res.render("listings/index.ejs", { allListing });
-			return;
-		}
-	}
-	const intValue = parseInt(element, 10); // 10 for decimal return - int ya NaN
-	const intDec = Number.isInteger(intValue); // check intValue is Number & Not Number return - true ya false
-
-	if (allListing.length == 0 && intDec) {
-		allListing = await Listing.find({ price: { $lte: element } }).sort({
-			price: 1,
+	if (category && category !== "All" && category !== "all") {
+		conditions.push({
+			category: { $regex: new RegExp(`^${escapeRegex(category)}$`, "i") },
 		});
-		if (allListing.length != 0) {
-			res.locals.success = `Listings searched for less than Rs ${element}`;
-			res.render("listings/index.ejs", { allListing });
-			return;
-		}
 	}
-	if (allListing.length == 0) {
-		req.flash("error", "Listings is not here !!!");
-		res.redirect("/listings");
+
+	let mongoQuery = conditions.length > 0 ? { $and: conditions } : {};
+	let allListing = await Listing.find(mongoQuery).sort({ _id: -1 });
+
+	if (allListing.length > 0) {
+		res.locals.success = `Found ${allListing.length} stay${allListing.length > 1 ? "s" : ""} matching your search`;
 	}
+
+	res.render("listings/index.ejs", {
+		allListing,
+		searchQuery: q,
+		filterCategory: category,
+		minPrice,
+		maxPrice,
+	});
 };
