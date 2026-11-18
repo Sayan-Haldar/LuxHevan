@@ -99,8 +99,11 @@ function escapeRegex(text) {
 }
 
 module.exports.filter = async (req, res, next) => {
-	let { id } = req.params;
-	let escapedCategory = escapeRegex(id.trim());
+	let id = (req.params.id || "").trim();
+	if (!id) {
+		return res.redirect("/listings");
+	}
+	let escapedCategory = escapeRegex(id);
 	let allListing = await Listing.find({
 		category: { $regex: new RegExp(`^${escapedCategory}$`, "i") },
 	}).sort({ _id: -1 });

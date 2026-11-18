@@ -49,20 +49,26 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
 
+if (process.env.NODE_ENV === "production") {
+	app.set("trust proxy", 1);
+}
+
+const secretKey = process.env.SECRET || "luxhevanProductionSecretKeyFallback";
+
 const store = MongoStore.create({
 	mongoUrl: DB_URL,
 	crypto: {
-		secret: process.env.SECRET,
+		secret: secretKey,
 	},
 	touchAfter: 24 * 3600,
 });
-store.on("error", () => {
-	console.log("ERROR in MONGO SESSION STORE");
+store.on("error", (err) => {
+	console.log("ERROR in MONGO SESSION STORE", err);
 });
 
 const sessionOptions = {
 	store,
-	secret: process.env.SECRET,
+	secret: secretKey,
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
