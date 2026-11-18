@@ -1,90 +1,120 @@
 <link rel="stylesheet" href="/css/filterbtn.css">
-<div class="main">
-    <header class="nav fixed-top">
-        <div>
-            <span class="close">
-                <svg xmlns="http://www.w3.org/2000/svg" onclick="closefilter()" height="1em" viewBox="0 0 384 512" style="cursor: pointer;">
-                    <path
-                        d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-                </svg>
-            </span>
-            <h1 style="font-size: 1.35rem; font-weight: 700; margin: 0;">Filters</h1>
-        </div>
-    </header>
 
-    <form action="/listings/search" method="GET" id="filterModalForm">
-        <div class="container-btn" style="padding-top: 70px; padding-bottom: 90px;">
-            <div>
-                <!-- 1. Search Destination / Keyword -->
-                <section class="mb-4">
-                    <div>
-                        <h2 class="h-tag" style="font-size: 1.15rem; font-weight: 600;">Destination or Stay Name</h2>
-                        <div class="text text-muted mb-2">Search by city, country, title, or landmark</div>
-                        <input type="text" name="q" class="form-control py-2 shadow-none" placeholder="e.g. Malibu, Aspen, Bali, Italy..." value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>">
-                    </div>
-                </section>
+<div class="main filter-modal-card">
+    <!-- Modal Header -->
+    <div class="filter-modal-header">
+        <button type="button" class="filter-close-btn" onclick="closefilter()" aria-label="Close filters">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h2>Filters</h2>
+        <div style="width: 34px;"></div> <!-- Spacer for perfect centering -->
+    </div>
 
-                <hr>
-
-                <!-- 2. Relatable Categories -->
-                <section class="mb-4">
-                    <div>
-                        <h2 class="h-tag" style="font-size: 1.15rem; font-weight: 600;">Property Category</h2>
-                        <div class="text text-muted mb-3">Choose a relatable stay style</div>
-                        
-                        <% 
-                            const modalActiveCat = typeof filterCategory !== 'undefined' && filterCategory ? filterCategory : '';
-                            const modalCategories = [
-                                "All", "Beachfront", "Cabins", "Villas", "Iconic Cities", 
-                                "Mountains", "Lakefront", "Amazing Pools", "Countryside", 
-                                "Tropical", "Treehouses", "Luxe", "Rooms", "Historic", "National Parks"
-                            ];
-                        %>
-                        <div class="d-flex flex-wrap gap-2">
-                            <% for (const cat of modalCategories) { %>
-                                <label class="btn btn-outline-dark btn-sm rounded-pill px-3 py-2" style="cursor: pointer;">
-                                    <input type="radio" name="category" value="<%= cat === 'All' ? '' : cat %>" class="btn-check" <%= (cat === modalActiveCat || (cat === 'All' && !modalActiveCat)) ? 'checked' : '' %>>
-                                    <%= cat %>
-                                </label>
-                            <% } %>
-                        </div>
-                    </div>
-                </section>
-
-                <hr>
-
-                <!-- 3. Price Range -->
-                <section class="mb-4">
-                    <div>
-                        <h2 class="h-tag" style="font-size: 1.15rem; font-weight: 600;">Price range</h2>
-                        <div class="text text-muted mb-2">Nightly prices in INR (&#8377;)</div>
-                    </div>
-                    <div class="price-range mt-2 d-flex gap-3">
-                        <div class="flex-grow-1">
-                            <label class="form-label text-muted small mb-1">Minimum Price</label>
-                            <div class="input-group">
-                                <span class="input-group-text">&#8377;</span>
-                                <input type="number" class="form-control shadow-none" name="minPrice" placeholder="500" min="0" value="<%= typeof minPrice !== 'undefined' && minPrice ? minPrice : '' %>">
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <label class="form-label text-muted small mb-1">Maximum Price</label>
-                            <div class="input-group">
-                                <span class="input-group-text">&#8377;</span>
-                                <input type="number" class="form-control shadow-none" name="maxPrice" placeholder="100000" min="0" value="<%= typeof maxPrice !== 'undefined' && maxPrice ? maxPrice : '' %>">
-                            </div>
-                        </div>
-                    </div>
-                </section>
+    <!-- Filter Form -->
+    <form action="/listings/search" method="GET" id="filterModalForm" style="display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; margin: 0;">
+        <div class="filter-modal-body">
+            
+            <!-- 1. Destination / Stay Search -->
+            <div class="filter-section">
+                <div class="filter-section-title">Where to?</div>
+                <div class="filter-section-subtitle">Search by city, country, or stay name</div>
+                <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #b0b0b0;">
+                    <span class="input-group-text bg-white border-0 ps-3"><i class="fa-solid fa-location-dot text-muted"></i></span>
+                    <input type="text" class="form-control border-0 shadow-none ps-2 py-2" name="q" id="filterModalQuery" placeholder="e.g. Malibu, Aspen, Bali, Italy..." value="<%= typeof searchQuery !== 'undefined' && searchQuery ? searchQuery : '' %>">
+                </div>
             </div>
+
+            <!-- 2. Relatable Categories -->
+            <div class="filter-section">
+                <div class="filter-section-title">Property Category</div>
+                <div class="filter-section-subtitle">Find the exact experience you want</div>
+                
+                <% 
+                    const currentCat = typeof filterCategory !== 'undefined' && filterCategory ? filterCategory.toLowerCase() : '';
+                    const categoriesList = [
+                        { name: "All Categories", val: "" },
+                        { name: "Beachfront", val: "Beachfront" },
+                        { name: "Cabins", val: "Cabins" },
+                        { name: "Villas", val: "Villas" },
+                        { name: "Iconic Cities", val: "Iconic Cities" },
+                        { name: "Mountains", val: "Mountains" },
+                        { name: "Lakefront", val: "Lakefront" },
+                        { name: "Amazing Pools", val: "Amazing Pools" },
+                        { name: "Countryside", val: "Countryside" },
+                        { name: "Tropical", val: "Tropical" },
+                        { name: "Treehouses", val: "Treehouses" },
+                        { name: "Luxe", val: "Luxe" },
+                        { name: "Rooms", val: "Rooms" },
+                        { name: "Historic", val: "Historic" },
+                        { name: "National Parks", val: "National Parks" }
+                    ];
+                %>
+                
+                <div class="filter-chip-group">
+                    <% categoriesList.forEach((c, idx) => { %>
+                        <% const isChecked = (c.val === '' && !currentCat) || (c.val.toLowerCase() === currentCat); %>
+                        <input type="radio" name="category" value="<%= c.val %>" class="filter-chip-radio" id="mcat-<%= idx %>" <%= isChecked ? 'checked' : '' %>>
+                        <label class="filter-chip-label" for="mcat-<%= idx %>">
+                            <% if (c.val === 'Beachfront') { %>🏖️<% } %>
+                            <% if (c.val === 'Cabins') { %>🪵<% } %>
+                            <% if (c.val === 'Villas') { %>🏡<% } %>
+                            <% if (c.val === 'Iconic Cities') { %>🏙️<% } %>
+                            <% if (c.val === 'Mountains') { %>⛰️<% } %>
+                            <% if (c.val === 'Lakefront') { %>🌊<% } %>
+                            <% if (c.val === 'Amazing Pools') { %>🏊<% } %>
+                            <% if (c.val === 'Countryside') { %>🌾<% } %>
+                            <% if (c.val === 'Tropical') { %>🌴<% } %>
+                            <% if (c.val === 'Treehouses') { %>🌲<% } %>
+                            <% if (c.val === 'Luxe') { %>✨<% } %>
+                            <% if (c.val === 'Rooms') { %>🛏️<% } %>
+                            <% if (c.val === 'Historic') { %>🏰<% } %>
+                            <% if (c.val === 'National Parks') { %>🏞️<% } %>
+                            <%= c.name %>
+                        </label>
+                    <% }); %>
+                </div>
+            </div>
+
+            <!-- 3. Price Range -->
+            <div class="filter-section">
+                <div class="filter-section-title">Price Range (per night)</div>
+                <div class="filter-section-subtitle">Nightly prices before taxes and fees</div>
+
+                <div class="price-input-row">
+                    <div class="price-input-card">
+                        <span class="price-input-label">Minimum</span>
+                        <div class="price-input-field">
+                            <span>₹</span>
+                            <input type="number" name="minPrice" id="filterMinPrice" placeholder="500" min="0" value="<%= typeof minPrice !== 'undefined' && minPrice ? minPrice : '' %>">
+                        </div>
+                    </div>
+                    <div class="price-input-card">
+                        <span class="price-input-label">Maximum</span>
+                        <div class="price-input-field">
+                            <span>₹</span>
+                            <input type="number" name="maxPrice" id="filterMaxPrice" placeholder="100,000" min="0" value="<%= typeof maxPrice !== 'undefined' && maxPrice ? maxPrice : '' %>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="price-presets">
+                    <span class="text-muted small align-self-center me-1">Quick Select:</span>
+                    <button type="button" class="price-preset-btn" onclick="setPriceRange(0, 25000)">Under ₹25k</button>
+                    <button type="button" class="price-preset-btn" onclick="setPriceRange(25000, 60000)">₹25k – ₹60k</button>
+                    <button type="button" class="price-preset-btn" onclick="setPriceRange(60000, 150000)">₹60k+</button>
+                    <button type="button" class="price-preset-btn" onclick="setPriceRange('', '')">Reset Price</button>
+                </div>
+            </div>
+
         </div>
 
-        <footer class="nav fixed-bottom" style="background: #ffffff; border-top: 1px solid #e0e0e0; z-index: 1060;">
-            <div class="d-flex justify-content-between align-items-center w-100 px-4">
-                <a href="/listings" class="btn btn-link text-dark text-decoration-underline p-0">Clear all</a>
-                <button type="submit" class="btn btn-danger px-4 py-2" style="background-color: #fe424d; border-color: #fe424d; border-radius: 8px; font-weight: 600;">Show Stays</button>
-            </div>
-        </footer>
+        <!-- Sticky Footer -->
+        <div class="filter-modal-footer">
+            <button type="button" class="filter-clear-btn" onclick="clearAllModalFilters()">Clear all</button>
+            <button type="submit" class="filter-submit-btn">Show Stays</button>
+        </div>
     </form>
 </div>
+
 <script src="/js/filterIcon.js"></script>

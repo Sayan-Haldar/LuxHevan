@@ -33,30 +33,43 @@
     }
 }
 
-#slideButton {
+#slideButton,
+.slide-btn {
     cursor: pointer;
     position: sticky;
-    background-color: rgb(128, 128, 128);
-    color: rgb(255, 255, 255);
-    height: 1.75rem;
-    width: 1.75rem;
-    border-radius: 50px;
+    background-color: #ffffff;
+    color: #222222;
+    height: 2.1rem;
+    width: 2.1rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.75rem;
-    padding: 10px;
-    z-index: 100;
-    transition: all .2s ease-out;
-}
-
-#slideButton:active {
-    transform: scale(1.2);
-    background-color: black;
-}
-
-#slideButton > i {
     font-size: 1rem;
+    padding: 0;
+    z-index: 100;
+    transition: all 0.2s ease-out;
+}
+
+#slideButton:hover,
+.slide-btn:hover {
+    transform: scale(1.08);
+    background-color: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+#slideButton:active,
+.slide-btn:active {
+    transform: scale(0.96);
+    background-color: #f7f7f7;
+}
+
+#slideButton > i,
+.slide-btn > i {
+    font-size: 0.88rem;
+    color: #222222;
 }
 
 .left_img_button {

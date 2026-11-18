@@ -1,21 +1,35 @@
-// Filters scroll slide buttons
+// Filters bar horizontal smooth scrolling
 const filtersBox = document.querySelector("#filters");
-const buttonSlide = document.querySelectorAll("#slideButton");
+const leftBtn = document.querySelector("#slideLeftBtn");
+const rightBtn = document.querySelector("#slideRightBtn");
 
-if (buttonSlide.length >= 2 && filtersBox) {
-	buttonSlide.forEach((button) => {
-		button.addEventListener("click", () => {
-			const direction = button.classList.contains("left_img_button") ? -1 : 1;
-			const scrollAmount = direction * Math.max(filtersBox.clientWidth - 120, 200);
-			filtersBox.scrollBy({ left: scrollAmount, behavior: "smooth" });
+if (filtersBox) {
+	if (leftBtn) {
+		leftBtn.addEventListener("click", () => {
+			filtersBox.scrollBy({ left: -260, behavior: "smooth" });
 		});
-	});
+	}
+
+	if (rightBtn) {
+		rightBtn.addEventListener("click", () => {
+			filtersBox.scrollBy({ left: 260, behavior: "smooth" });
+		});
+	}
 
 	filtersBox.addEventListener("scroll", () => {
-		buttonSlide[0].style.display = filtersBox.scrollLeft <= 5 ? "none" : "flex";
-		buttonSlide[1].style.display =
-			filtersBox.scrollLeft >= filtersBox.scrollWidth - filtersBox.clientWidth - 5
-				? "none"
-				: "flex";
+		if (leftBtn) {
+			leftBtn.style.display = filtersBox.scrollLeft <= 10 ? "none" : "flex";
+		}
+		if (rightBtn) {
+			const maxScroll = filtersBox.scrollWidth - filtersBox.clientWidth - 10;
+			rightBtn.style.display = filtersBox.scrollLeft >= maxScroll ? "none" : "flex";
+		}
 	});
+
+	// Initial check on load
+	setTimeout(() => {
+		if (rightBtn && filtersBox.scrollWidth > filtersBox.clientWidth) {
+			rightBtn.style.display = "flex";
+		}
+	}, 150);
 }

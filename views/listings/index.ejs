@@ -29,9 +29,9 @@
     %>
     <div class="filters-main">
         <div id="filters">
-            <div class="left_img_button" id="slideButton" style="display: none;">
+            <button type="button" class="slide-btn left_img_button" id="slideLeftBtn" style="display: none;" aria-label="Scroll left">
                 <i class="fa-solid fa-angle-left"></i>
-            </div>
+            </button>
             
             <a href="/listings">
                 <div class="filter ALL ps-2 pe-2 <%= !activeCat ? 'selectedFilter' : '' %>">
@@ -138,9 +138,9 @@
                 </div>
             </a>
             
-            <div class="right_img_button" id="slideButton">
+            <button type="button" class="slide-btn right_img_button" id="slideRightBtn" aria-label="Scroll right">
                 <i class="fa-solid fa-angle-right"></i>
-            </div>
+            </button>
         </div>
         
         <div class="tax-toggle tax-filter-icon filterIcon me-2 ms-2 " onclick="filterClick()">
