@@ -41,7 +41,7 @@ module.exports.showListing = async (req, res, next) => {
 
 	if (!listing) {
 		req.flash("error", "Listing you requested for does not exist!");
-		res.redirect("/listings");
+		return res.redirect("/listings");
 	}
 	console.log(listing);
 	res.render("listings/show.ejs", { listing });
@@ -50,11 +50,13 @@ module.exports.showListing = async (req, res, next) => {
 module.exports.renderEditForm = async (req, res, next) => {
 	let { id } = req.params;
 	let listing = await Listing.findById(id);
-	let originalImage = listing.image.url;
-	originalImage = originalImage.replace("/upload", "/upload/w_200,h_150");
 	if (!listing) {
 		req.flash("error", "Listing you requested for does not exist!");
-		res.redirect("/listings");
+		return res.redirect("/listings");
+	}
+	let originalImage = listing.image ? listing.image.url : "";
+	if (originalImage) {
+		originalImage = originalImage.replace("/upload", "/upload/w_200,h_150");
 	}
 	res.render("listings/edit.ejs", { listing, originalImage });
 };
@@ -110,13 +112,13 @@ module.exports.filterbtn = (req, res, next) => {
 };
 
 module.exports.search = async (req, res) => {
-	console.log(req.query.q);
-	let input = req.query.q.trim().replace(/\s+/g, " "); // remove start and end space and middle space remove and middle add one space------
+	let q = req.query.q || "";
+	let input = q.trim().replace(/\s+/g, " "); // remove start and end space and middle space remove and middle add one space------
 	console.log(input);
 	if (input == "" || input == " ") {
 		//search value empty
 		req.flash("error", "Search value empty !!!");
-		res.redirect("/listings");
+		return res.redirect("/listings");
 	}
 
 	// convert every word 1st latter capital and other small---------------

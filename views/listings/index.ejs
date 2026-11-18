@@ -193,6 +193,14 @@
         </div>
     </div>
     <div class="row row-cols-xxl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-1">
+        <% if (allListing.length === 0) { %>
+            <div class="col-12 text-center my-5 py-5">
+                <i class="fa-solid fa-hotel fa-3x text-muted mb-3"></i>
+                <h3>No Stays Available</h3>
+                <p class="text-muted">No listings match your search or filter. Try exploring another category!</p>
+                <a href="/listings" class="btn btn-outline-dark mt-2">Explore All Stays</a>
+            </div>
+        <% } %>
         <% for (const listing of allListing) { %>
             <a href="/listings/<%= listing._id %>" class="listing-link">
                 <div class="card col listing-card index-res">
@@ -200,7 +208,7 @@
                         <div class="card-img">
                             <img class="heart heart-r" src="/Icon/heart-red.png" alt="like" style="opacity: 1; z-index: 5;">
                             <img class="heart heart-b" src="/Icon/heart-black.png" alt="like" style="z-index: 6;">
-                            <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" />
+                            <img src="<%= listing.image && listing.image.url ? listing.image.url : '/Icon/0.png' %>" class="card-img-top" alt="listing_image" />
                         </div>
                         <!-- set date  -->
                         <%

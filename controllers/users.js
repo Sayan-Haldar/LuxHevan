@@ -109,11 +109,13 @@ module.exports.deleteAccount = async (req, res, next) => {
 	try {
 		let { id } = req.params;
 		await Listing.deleteMany({ owner: id });
-		await Review.deleteMany({author: id})
-		await User.findByIdAndRemove(id);
-		// req.logout();
-		req.flash("error", "Your account has been successfully deleted.");
-		res.redirect("/listings");
+		await Review.deleteMany({ author: id });
+		await User.findByIdAndDelete(id);
+		req.logout((err) => {
+			if (err) return next(err);
+			req.flash("error", "Your account has been successfully deleted.");
+			res.redirect("/listings");
+		});
 	} catch (e) {
 		req.flash("error", e.message);
 		res.redirect("/listings");

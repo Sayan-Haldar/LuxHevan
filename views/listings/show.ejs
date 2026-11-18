@@ -21,12 +21,12 @@
                     <h3><%= listing.title %></h3>
                     <p class="stay-meta"><i class="fa-solid fa-location-dot"></i> <%= listing.location %>, <%= listing.country %></p>
                     <div class="stay-photo">
-                        <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
+                        <img src="<%= listing.image && listing.image.url ? listing.image.url : '/Icon/error-img.jpg' %>" alt="<%= listing.title %>">
                     </div>
                     <div class="stay-facts">
-                        <p><b>Hosted by</b> @<%= listing.owner.username %></p>
+                        <p><b>Hosted by</b> @<%= listing.owner && listing.owner.username ? listing.owner.username : 'LuxHaven Host' %></p>
                         <p><%= listing.description %></p>
-                        <p><b>Category:</b> <%= listing.category.slice(",").join(", ") %></p>
+                        <p><b>Category:</b> <%= (listing.category && Array.isArray(listing.category) ? listing.category.join(", ") : (listing.category || "General")) %></p>
                     </div>
                 </div>
                 <aside class="reserve-card" data-booking data-price="<%= listing.price %>">
