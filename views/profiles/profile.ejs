@@ -5,7 +5,7 @@
         <div class="main-profiles mt-2">
             <div class="main-profile-detail">
                 <div class="profile-img">
-                    <% if(!currUser.image.url) {%>
+                    <% if(!currUser.image || !currUser.image.url) {%>
                         <img src="/Icon/navbar-icon-user.png">
                     <% } else{%>
                         <img src="<%= currUser.image.url %>">
@@ -95,7 +95,7 @@
                                     <span><b>Date :</b> <%= review.createAt.toString().split(" ").slice(1,4).join("-") %></span><br>
                                     <span><b>Time :</b> <%= review.createAt.toString().split(" ")[4] %></span><br>
                                     <span><b>Comment :</b> <%= review.comment %></span><br>
-                                    <span class="ratingBox"><b>Rating : &nbsp;</b> <p class="starability-result" data-rating="<%= review.rating %>"></p></span>
+                                    <span class="ratingBox"><b>Rating : &nbsp;</b> <span class="review-stars" title="<%= review.rating %> out of 5 stars"><% for(let i = 1; i <= 5; i++) { %><i class="<%= i <= review.rating ? 'fa-solid' : 'fa-regular' %> fa-star"></i><% } %><span class="rating-num">(<%= review.rating %>/5)</span></span></span>
                                 </div>
                                 <div class="lists-btn mt-1">
                                     <button class="list-btn list-show"><a href="/listings/<%= review.listing %>">Show</a></button>
@@ -197,7 +197,7 @@
                                     <span><b>Date :</b> <%= review.createAt.toString().split(" ").slice(1,4).join("-") %></span><br>
                                     <span><b>Time :</b> <%= review.createAt.toString().split(" ")[4] %></span><br>
                                     <span><b>Comment :</b> <%= review.comment %></span><br>
-                                    <span class="ratingBox"><b>Rating : &nbsp;</b> <p class="starability-result" data-rating="<%= review.rating %>"></p></span>
+                                    <span class="ratingBox"><b>Rating : &nbsp;</b> <span class="review-stars" title="<%= review.rating %> out of 5 stars"><% for(let i = 1; i <= 5; i++) { %><i class="<%= i <= review.rating ? 'fa-solid' : 'fa-regular' %> fa-star"></i><% } %><span class="rating-num">(<%= review.rating %>/5)</span></span></span>
                                 </div>
                                 <div class="lists-btn mt-1">
                                     <button class="list-btn list-show"><a href="/listings/<%= review.listing %>">Show</a></button>

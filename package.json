@@ -1,12 +1,13 @@
 {
 	"engines": {
-		"node": "18.17.1"
+		"node": ">=18.0.0"
 	},
-	"name": "major_project",
+	"name": "luxhevan",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Luxury Holiday Homes & Stays platform",
 	"main": "app.js",
 	"scripts": {
+		"start": "node app.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
